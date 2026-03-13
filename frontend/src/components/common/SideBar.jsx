@@ -42,7 +42,7 @@ const Sidebar = () => {
     "flex items-center gap-4 px-3 py-2 rounded-full transition-all hover:bg-stone-900";
 
   return (
-    <aside className="flex flex-col h-screen sticky top-0 border-r border-gray-700
+    <aside className="flex flex-col h-screen sticky top-0 border-r border-base-300
                       w-16 md:w-64 px-2">
 
       {/* Logo */}
@@ -116,3 +116,4 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
+

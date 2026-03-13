@@ -119,7 +119,7 @@ const Post = ({ post }) => {
 
 	return (
 		<>
-			<div className='flex items-start gap-2 p-4 border-b border-gray-700'>
+			<div className='flex items-start gap-2 p-4 border-b border-base-300'>
 				<div className='avatar'>
 					<Link to={`/profile/${postOwner.username}`} className='w-8 overflow-hidden rounded-full'>
 						<img src={postOwner.profileImg || "/avatar-placeholder.png"} />
@@ -147,7 +147,7 @@ const Post = ({ post }) => {
 						{post.img && (
 							<img
 								src={post.img}
-								className='object-contain border border-gray-700 rounded-lg h-80'
+								className='object-contain border border-base-300 rounded-lg h-80'
 								alt=''
 							/>
 						)}

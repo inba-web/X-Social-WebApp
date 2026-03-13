@@ -7,9 +7,9 @@ const HomePage = () => {
 
   return (
     <>
-      <div className="flex-[4_4_0] mr-auto border-r border-gray-700 min-h-screen">   
+      <div className="flex-[4_4_0] mr-auto border-r border-base-300 min-h-screen">   
         
-        <div className="relative flex border-b border-gray-700">
+        <div className="relative flex border-b border-base-300">
           
           <div
             className="relative flex justify-center flex-1 p-3 cursor-pointer "
@@ -41,3 +41,4 @@ const HomePage = () => {
 };
 
 export default HomePage;
+

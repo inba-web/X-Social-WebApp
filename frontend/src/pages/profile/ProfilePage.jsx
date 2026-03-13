@@ -103,7 +103,7 @@ const ProfilePage = () => {
 
 	return (
 		<>
-			<div className='flex-[4_4_0]  border-r border-gray-700 min-h-screen '>
+			<div className='flex-[4_4_0]  border-r border-base-300 min-h-screen '>
 				{/* HEADER */}
 				{(isLoading || isRefetching) && <ProfileHeaderSkeleton />}
 				{!isLoading && !user && <p className='mt-4 text-lg text-center'>User not found</p>}
@@ -230,7 +230,7 @@ const ProfilePage = () => {
 									</div>
 								</div>
 							</div>
-							<div className='flex w-full mt-4 border-b border-gray-700'>
+							<div className='flex w-full mt-4 border-b border-base-300'>
 								<div
 									className='relative flex justify-center flex-1 p-3 transition duration-300 cursor-pointer hover:bg-secondary'
 									onClick={() => setFeedType("posts")}

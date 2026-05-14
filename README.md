@@ -55,7 +55,7 @@ The application is fully deployed on **Render** and mirrors core social media fu
 ---
 
 ## 🏗️ Project Structure
-
+```
 X-CLONE/
 │
 ├── backend/
@@ -74,7 +74,7 @@ X-CLONE/
 ├── .env
 ├── package.json
 └── README.md
-
+```
 
 ## ⚙️ Environment Variables
 

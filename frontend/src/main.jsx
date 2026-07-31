@@ -9,11 +9,7 @@ import {
 } from '@tanstack/react-query'
 import { ClerkProvider } from '@clerk/clerk-react'
 
-const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
-
-if (!PUBLISHABLE_KEY) {
-  throw new Error("Missing Publishable Key")
-}
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY || "pk_test_aGFybWxlc3MtcmFtLTg4LmNsZXJrLmFjY291bnRzLmRldiQ";
 
 const queryClient = new QueryClient({
   defaultOptions : {

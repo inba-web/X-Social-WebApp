@@ -108,7 +108,7 @@ export const updateUser = async (req, res) => {
       const emailExists = await User.findOne({ email });
       if (emailExists) {
         return res.status(400).json({ error: "Email already exists" });
-      }
+      } 
     }
 
     if (currentPassword || newPassword) {

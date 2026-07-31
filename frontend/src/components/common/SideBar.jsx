@@ -4,38 +4,28 @@ import { FaUser } from "react-icons/fa";
 import { MdHomeFilled } from "react-icons/md";
 import { BiLogOut } from "react-icons/bi";
 import { Link } from "react-router-dom";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import XSvg from "../svgs/X";
-import { baseURL } from "../../constant/url";
+import { useAuth } from "@clerk/clerk-react";
 
 const Sidebar = () => {
   const queryClient = useQueryClient();
+  const { signOut } = useAuth();
 
-  const { mutate: logOut } = useMutation({
-    mutationFn: async () => {
-      const res = await fetch(`${baseURL}api/auth/logout`, {
-        method: "POST",
-        credentials: "include",
-      });
-      if (!res.ok) throw new Error("Logout failed");
-    },
-    onSuccess: () => {
+  const handleLogout = async () => {
+    try {
+      await signOut();
       toast.success("Logout successful");
-      queryClient.invalidateQueries({ queryKey: ["authUser"] });
-    },
-    onError: () => toast.error("Logout failed"),
-  });
+      queryClient.setQueryData(["authUser"], null);
+      queryClient.clear();
+    } catch (err) {
+      toast.error("Logout failed");
+    }
+  };
 
   const { data: authUser } = useQuery({
-    queryKey: ["authUser"],
-    queryFn: async () => {
-      const res = await fetch(`${baseURL}api/auth/me`, {
-        credentials: "include",
-      });
-      if (!res.ok) return null;
-      return res.json();
-    },
+    queryKey: ["authUser"]
   });
 
   const navItem =
@@ -43,7 +33,7 @@ const Sidebar = () => {
 
   return (
     <aside className="flex flex-col h-screen sticky top-0 border-r border-base-300
-                      w-16 md:w-64 px-2">
+                      w-20 md:w-[275px] px-2 flex-shrink-0 z-20 bg-black/30 backdrop-blur-md">
 
       {/* Logo */}
       <Link to="/" className="flex justify-center md:justify-start px-3 py-4">
@@ -104,7 +94,7 @@ const Sidebar = () => {
                 className="w-5 h-5 cursor-pointer"
                 onClick={(e) => {
                   e.preventDefault();
-                  logOut();
+                  handleLogout();
                 }}
               />
             </div>

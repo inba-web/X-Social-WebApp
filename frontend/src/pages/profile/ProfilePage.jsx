@@ -3,13 +3,12 @@ import { Link, useParams } from "react-router-dom";
 import Posts from "../../components/common/Posts";
 import ProfileHeaderSkeleton from "../../components/skeletons/ProfileHeaderSkeleton";
 import EditProfileModal from "./EditProfileModal";
-import { POSTS } from "../../utils/db/dummy";
 import { FaArrowLeft } from "react-icons/fa6";
 import { IoCalendarOutline } from "react-icons/io5";
 import { FaLink } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { baseURL } from "../../constant/url";
+import { fetchWithAuth } from "../../utils/api";
 import { formatMemberSinceDate } from "../../utils/data/index";
 import useFollow from "../../hooks/useFollow";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
@@ -30,14 +29,10 @@ const ProfilePage = () => {
 	const { data: authUser } = useQuery({ queryKey: ["authUser"] })
 
 	const { data: user, isLoading, refetch, isRefetching } = useQuery({
-		queryKey: ["userProfile"],
+		queryKey: ["userProfile", username],
 		queryFn: async () => {
-			const res = await fetch(`${baseURL}api/users/profile/${username}`, {
-				method: "GET",
-				credentials: "include",
-				headers: {
-					"Content-Type": "application/json"
-				}
+			const res = await fetchWithAuth(`api/users/profile/${username}`, {
+				method: "GET"
 			})
 			const data = await res.json();
 			if (!res.ok) {
@@ -46,6 +41,16 @@ const ProfilePage = () => {
 			return data;
 		}
 	})
+
+	const { data: posts } = useQuery({
+		queryKey: ["posts", username],
+		queryFn: async () => {
+			const res = await fetchWithAuth(`api/posts/user/${username}`);
+			const data = await res.json();
+			if (!res.ok) throw new Error(data.error || "Something went wrong");
+			return data;
+		}
+	});
 
 	const isMyProfile = authUser?._id === user?._id;
 	const { follow, isPending } = useFollow();
@@ -57,12 +62,8 @@ const ProfilePage = () => {
 
 	const { mutate: updateProfile, isPending: isUpdatingProfile } = useMutation({
 		mutationFn: async () => {
-			const res = await fetch(`${baseURL}api/users/update`, {
+			const res = await fetchWithAuth("api/users/update", {
 				method: "POST",
-				credentials: "include",
-				headers: {
-					"Content-Type": "application/json"
-				},
 				body: JSON.stringify({
 					coverImg,
 					profileImg
@@ -103,7 +104,7 @@ const ProfilePage = () => {
 
 	return (
 		<>
-			<div className='flex-[4_4_0]  border-r border-base-300 min-h-screen '>
+			<div className='flex-1 max-w-[600px] border-r border-base-300 min-h-screen'>
 				{/* HEADER */}
 				{(isLoading || isRefetching) && <ProfileHeaderSkeleton />}
 				{!isLoading && !user && <p className='mt-4 text-lg text-center'>User not found</p>}
@@ -116,7 +117,7 @@ const ProfilePage = () => {
 								</Link>
 								<div className='flex flex-col'>
 									<p className='text-lg font-bold'>{user?.fullName}</p>
-									<span className='text-sm text-slate-500'>{POSTS?.length} posts</span>
+									<span className='text-sm text-slate-500'>{posts?.length || 0} posts</span>
 								</div>
 							</div>
 							{/* COVER IMG */}
@@ -165,7 +166,7 @@ const ProfilePage = () => {
 								</div>
 							</div>
 							<div className='flex justify-end px-4 mt-5'>
-								{isMyProfile && <EditProfileModal />}
+								{isMyProfile && <EditProfileModal authUser={authUser} />}
 								{!isMyProfile && (
 									<button
 										className='rounded-full btn btn-outline btn-sm'

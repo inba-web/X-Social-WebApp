@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node backend/server.js",
     "build": "npm install && npm install --include=dev --prefix frontend && npm run build --prefix frontend",
-    "dev": "nodemon backend/server.js"
+    "dev": "nodemon --watch backend backend/server.js"
   },
   "keywords": [],
   "author": "",
@@ -18,7 +18,9 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "helmet": "^8.3.0",
     "jsonwebtoken": "^9.0.2",
+    "jwks-rsa": "^4.1.0",
     "mongoose": "^8.4.0"
   },
   "devDependencies": {

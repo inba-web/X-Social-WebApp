@@ -3,7 +3,7 @@ import { BsEmojiSmileFill } from "react-icons/bs";
 import { useRef, useState } from "react";
 import { IoCloseSharp } from "react-icons/io5";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { baseURL } from "../../constant/url";
+import { fetchWithAuth } from "../../utils/api";
 import toast from "react-hot-toast"
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 
@@ -18,12 +18,8 @@ const CreatePost = () => {
   const queryClient = useQueryClient();
   const { mutate: CreatePost, isPending, isError, error } = useMutation({
     mutationFn: async ({ text, img }) => {
-      const res = await fetch(`${baseURL}api/posts/create`, {
+      const res = await fetchWithAuth("api/posts/create", {
         method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json"
-        },
         body: JSON.stringify({ text, img })
       })
       const data = await res.json()
@@ -88,7 +84,7 @@ const CreatePost = () => {
               className="w-5 h-5 cursor-pointer fill-primary"
               onClick={() => imgRef.current.click()}
             />
-            <BsEmojiSmileFill className="w-5 h-5 cursor-pointer fill-primwrap-anywhere" />
+            <BsEmojiSmileFill className="w-5 h-5 cursor-pointer fill-primary" />
           </div>
           <input type="file" hidden ref={imgRef} onChange={handleImgChange} />
           <button className="px-4 text-white rounded-full btn btn-primary btn-sm">

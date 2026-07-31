@@ -1,9 +1,8 @@
 import React from 'react';
 import RightPanelSkeleton from '../skeletons/RightPanelSkeleton';
-import { USERS_FOR_RIGHT_PANEL } from '../../utils/db/dummy';
 import { Link } from 'react-router-dom';
 import { useQuery } from "@tanstack/react-query";
-import { baseURL } from "../../constant/url";
+import { fetchWithAuth } from '../../utils/api';
 import useFollow from '../../hooks/useFollow';
 import LoadingSpinner from '../common/LoadingSpinner';
 
@@ -12,12 +11,8 @@ const RightPanel = () => {
     const { data: suggestedUsers, isLoading } = useQuery({
         queryKey: ["suggestedUsers"],
         queryFn: async () => {
-            const res = await fetch(`${baseURL}api/users/suggested`, {
-                method: "GET",
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json"
-                }
+            const res = await fetchWithAuth("api/users/suggested", {
+                method: "GET"
             })
             const data = await res.json();
             if (!res.ok) {
@@ -36,9 +31,9 @@ const RightPanel = () => {
     }
 
     return (
-        <div className='hidden mx-2 my-4 lg:block'>
-            <div className='bg-[#16181C] p-4 rounded-md sticky top-2'>
-                <p className='font-bold'>Who to follow</p>
+        <div className='hidden lg:block w-[350px] flex-shrink-0 mx-6 my-4'>
+            <div className='bg-[#0c0d12]/60 backdrop-blur-md p-4 rounded-2xl border border-white/5 sticky top-4 shadow-xl shadow-black/40'>
+                <p className='font-bold text-lg mb-3'>Who to follow</p>
                 <div className='flex flex-col gap-4'>
                     {
                         isLoading && (
@@ -54,7 +49,7 @@ const RightPanel = () => {
                         !isLoading &&
                         suggestedUsers?.map((user) =>
                             <Link to={`/profile/${user.userName}`} className='flex items-center justify-between gap-4' key={user._id}>
-                                <div className='flex gap-2 itmes-center'>
+                                <div className='flex gap-2 items-center'>
                                     <div className='avatar'>
                                         <div className='w-8 rounded-full'>
                                             <img src={user.profileImg || "/avatar-placeholder.png"} alt="" />

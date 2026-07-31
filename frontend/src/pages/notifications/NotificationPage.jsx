@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
-import { baseURL } from '../../constant/url'
+import { fetchWithAuth } from "../../utils/api";
 import { IoSettingsOutline } from "react-icons/io5";
 import { FaUser } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa6";
@@ -13,12 +13,8 @@ const NotificationPage = () => {
 	const { data: notifications = [], isLoading } = useQuery({
 		queryKey: ["notifications"],
 		queryFn: async () => {
-			const res = await fetch(`${baseURL}api/notifications`, {
-				method: "GET",
-				credentials: "include",
-				headers: {
-					"Content-Type": "application/json",
-				},
+			const res = await fetchWithAuth("api/notifications", {
+				method: "GET"
 			});
 
 			const data = await res.json();
@@ -29,12 +25,8 @@ const NotificationPage = () => {
 
 	const { mutate: deleteNotifications } = useMutation({
 		mutationFn: async () => {
-			const res = await fetch(`${baseURL}api/notifications`, {
-				method: "DELETE",
-				credentials: "include",
-				headers: {
-					"Content-Type": "application/json",
-				},
+			const res = await fetchWithAuth("api/notifications", {
+				method: "DELETE"
 			});
 
 			const data = await res.json();
@@ -53,7 +45,7 @@ const NotificationPage = () => {
 
 	return (
 		<>
-			<div className='flex-[4_4_0] border-l border-r border-base-300 min-h-screen'>
+			<div className='flex-1 max-w-[600px] border-r border-base-300 min-h-screen'>
 				<div className='flex items-center justify-between p-4 border-b border-base-300'>
 					<p className='font-bold'>Notifications</p>
 
@@ -90,7 +82,7 @@ const NotificationPage = () => {
 							{notification.type === "follow" && <FaUser className='w-7 h-7 text-primary' />}
 							{notification.type === "like" && <FaHeart className='text-red-500 w-7 h-7' />}
 
-							<Link to={`/profile/${notification.from.username}`}>
+							<Link to={`/profile/${notification.from.userName}`}>
 								<div className='avatar'>
 									<div className='w-8 rounded-full'>
 										<img
@@ -102,7 +94,7 @@ const NotificationPage = () => {
 
 								<div className='flex gap-1'>
 									<span className='font-bold'>
-										@{notification.from.username}
+										@{notification.from.userName}
 									</span>
 									{notification.type === "follow"
 										? "followed you"

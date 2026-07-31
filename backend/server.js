@@ -9,10 +9,28 @@ import authRoute from "./routes/auth.route.js";
 import userRoute from "./routes/user.route.js";
 import postRoute from "./routes/post.route.js";
 import notificationRoute from "./routes/notification.route.js"; 
+import helmet from "helmet";
 
 dotenv.config();
 
 const app = express();
+
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'", "https://harmless-ram-88.clerk.accounts.dev", "https://*.clerk.accounts.dev"],
+        connectSrc: ["'self'", "https://harmless-ram-88.clerk.accounts.dev", "https://*.clerk.accounts.dev"],
+        imgSrc: ["'self'", "data:", "blob:", "https://res.cloudinary.com", "https://images.clerk-static.com", "https://img.clerk.com", "https://images.unsplash.com"],
+        styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+        fontSrc: ["'self'", "https://fonts.gstatic.com"],
+        objectSrc: ["'none'"],
+        upgradeInsecureRequests: [],
+      },
+    },
+  })
+);
 const __dirname = path.resolve();
 
 if (

@@ -6,7 +6,7 @@ import { FaTrash } from "react-icons/fa";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { baseURL } from "../../constant/url";
+import { fetchWithAuth } from "../../utils/api";
 import LoadingSpinner from "./LoadingSpinner";
 import toast from "react-hot-toast";
 import { formatPostDate } from "../../utils/data/index";
@@ -19,12 +19,8 @@ const Post = ({ post }) => {
 	const queryClient = useQueryClient();
 	const { mutate: deletePost, isPending: isDeleting, } = useMutation({
 		mutationFn: async () => {
-			const res = await fetch(`${baseURL}api/posts/${post._id}`, {
-				method: "DELETE",
-				credentials: "include",
-				headers: {
-					"Content-Type": "application/json"
-				}
+			const res = await fetchWithAuth(`api/posts/${post._id}`, {
+				method: "DELETE"
 			})
 			const data = await res.json()
 			if (!res.ok) {
@@ -42,16 +38,12 @@ const Post = ({ post }) => {
 
 	const { mutate: likePost, isPending: isLiking } = useMutation({
 		mutationFn: async () => {
-			const res = await fetch(`${baseURL}api/posts/like/${post._id}`, {
-				method: "POST",
-				credentials: "include",
-				headers: {
-					"Content-Type": "application/json"
-				}
+			const res = await fetchWithAuth(`api/posts/like/${post._id}`, {
+				method: "POST"
 			})
 			const data = await res.json();
 			if (!res.ok) {
-				throw new Error(data.error | "Something went wrong")
+				throw new Error(data.error || "Something went wrong")
 			}
 			return data;
 		},
@@ -74,12 +66,8 @@ const Post = ({ post }) => {
 
 	const { mutate: commentPost, isPending: isCommenting } = useMutation({
 		mutationFn: async () => {
-			const res = await fetch(`${baseURL}api/posts/comment/${post._id}`, {
+			const res = await fetchWithAuth(`api/posts/comment/${post._id}`, {
 				method: "POST",
-				credentials: "include",
-				headers: {
-					"Content-Type": "application/json"
-				},
 				body: JSON.stringify({ text: comment })
 			})
 			const data = await res.json();
@@ -121,13 +109,13 @@ const Post = ({ post }) => {
 		<>
 			<div className='flex items-start gap-2 p-4 border-b border-base-300'>
 				<div className='avatar'>
-					<Link to={`/profile/${postOwner.username}`} className='w-8 overflow-hidden rounded-full'>
+					<Link to={`/profile/${postOwner.userName}`} className='w-8 overflow-hidden rounded-full'>
 						<img src={postOwner.profileImg || "/avatar-placeholder.png"} />
 					</Link>
 				</div>
 				<div className='flex flex-col flex-1'>
 					<div className='flex items-center gap-2'>
-						<Link to={`/profile/${postOwner.username}`} className='font-bold'>
+						<Link to={`/profile/${postOwner.userName}`} className='font-bold'>
 							{postOwner.fullName}
 						</Link>
 						<span className='flex gap-1 text-sm text-gray-700'>

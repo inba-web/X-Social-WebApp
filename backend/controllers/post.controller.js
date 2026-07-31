@@ -46,11 +46,11 @@ export const deletePost = async (req, res) => {
     const post = await Post.findOne({ _id: id });
 
     if (!post) {
-      res.status(404).json({ error: "Post not found" });
+      return res.status(404).json({ error: "Post not found" });
     }
 
     if (post.user.toString() != req.user._id.toString()) {
-      res
+      return res
         .status(401)
         .json({ error: "You are not authorized to delete this post" });
     }
@@ -75,7 +75,7 @@ export const commentPost = async (req, res) => {
     const userId = req.user._id;
 
     if (!text) {
-      res.status(400).json({ error: "Comment text is required" });
+      return res.status(400).json({ error: "Comment text is required" });
     }
 
     const post = await Post.findOne({ _id: postId });

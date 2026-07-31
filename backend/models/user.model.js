@@ -7,6 +7,11 @@ const UserSchema = mongoose.Schema(
       required: true,
       unique: true,
     },
+    clerkId: {
+      type: String,
+      unique: true,
+      sparse: true,
+    },
     fullName: {
       type: String,
       required: true,
@@ -17,7 +22,7 @@ const UserSchema = mongoose.Schema(
       unique: true,
     }, 
     password: {
-      required: true,
+      required: false,
       type: String,
       minLength: 6,
     },

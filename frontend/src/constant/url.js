@@ -1,1 +1,1 @@
-export const baseURL = "https://x-social-qldo.onrender.com/" 
+export const baseURL = "/"; 

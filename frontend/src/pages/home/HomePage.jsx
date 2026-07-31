@@ -7,7 +7,7 @@ const HomePage = () => {
 
   return (
     <>
-      <div className="flex-[4_4_0] mr-auto border-r border-base-300 min-h-screen">   
+      <div className="flex-1 max-w-[600px] border-r border-base-300 min-h-screen">   
         
         <div className="relative flex border-b border-base-300">
           

@@ -1,38 +1,33 @@
 import React, { useEffect } from 'react'
 import Post from '../common/Post'
 import PostSkeleton from '../skeletons/PostSkeleton'
-import { POSTS } from '../../utils/db/dummy'
-import { baseURL } from '../../constant/url'
 import { useQuery } from '@tanstack/react-query'
+import { fetchWithAuth } from '../../utils/api'
 
 const Posts = ({ feedType, username, userId }) => {
 
   const getPostEndPoint = () => {
     switch (feedType) {
       case "forYou":
-        return `${baseURL}api/posts/all`;
+        return `api/posts/all`;
       case "following":
-        return `${baseURL}api/posts/following`;
+        return `api/posts/following`;
       case "posts":
-        return `${baseURL}api/posts/user/${username}`;
+        return `api/posts/user/${username}`;
       case "likes":
-        return `${baseURL}api/posts/likes/${userId}`;
+        return `api/posts/likes/${userId}`;
       default:
-        return `${baseURL}api/posts/all`;
+        return `api/posts/all`;
     }
   }
 
   const POST_ENDPOINT = getPostEndPoint();
 
-  const { data: posts, isLoading, refetch, isrefetching } = useQuery({
+  const { data: posts, isLoading, refetch, isRefetching } = useQuery({
     queryKey: ["posts"],
     queryFn: async () => {
-      const res = await fetch(POST_ENDPOINT, {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json"
-        }
+      const res = await fetchWithAuth(POST_ENDPOINT, {
+        method: "GET"
       })
       const data = await res.json();
       if (!res.ok) {
@@ -50,7 +45,7 @@ const Posts = ({ feedType, username, userId }) => {
   return (
     <>
       {
-        (isLoading || isrefetching) && (
+        (isLoading || isRefetching) && (
           <div className='flex flex-col justify-center'>
             <PostSkeleton />
             <PostSkeleton />
